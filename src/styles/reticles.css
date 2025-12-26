@@ -1,0 +1,30 @@
+/* Animated reticles around focused widgets */
+.hud-focused{
+  outline: none;
+}
+
+.hud-focused::before{
+  content:"";
+  position:absolute; inset:-10px;
+  border-radius: calc(var(--radius) + 10px);
+  border: 1px dashed rgba(184,107,255,.65);
+  filter: drop-shadow(var(--glow-strong));
+  pointer-events:none;
+  animation: reticleSpin 2.8s linear infinite;
+}
+
+.hud-focused::after{
+  content:"";
+  position:absolute; inset:-6px;
+  border-radius: calc(var(--radius) + 6px);
+  background:
+    radial-gradient(120px 120px at 15% 15%, rgba(68,215,255,.18), transparent 55%),
+    radial-gradient(120px 120px at 85% 85%, rgba(184,107,255,.18), transparent 55%);
+  pointer-events:none;
+  opacity: .8;
+}
+
+@keyframes reticleSpin{
+  from{ transform: rotate(0deg); }
+  to{ transform: rotate(360deg); }
+}
