@@ -1,0 +1,56 @@
+{
+  "status": "SUCCESS",
+  "duration_seconds": 50.3,
+  "validation": {
+    "status_endpoint": true,
+    "control_endpoint": true,
+    "policy_gate": true
+  },
+  "logs": [
+    {
+      "timestamp": "2025-12-26T11:56:38.597545",
+      "level": "INFO",
+      "message": "=== DEPLOYMENT AGENT STARTED ==="
+    },
+    {
+      "timestamp": "2025-12-26T11:56:38.597676",
+      "level": "INFO",
+      "message": "Step 1: Running build test..."
+    },
+    {
+      "timestamp": "2025-12-26T11:57:13.223539",
+      "level": "SUCCESS",
+      "message": "Build succeeded [OK]"
+    },
+    {
+      "timestamp": "2025-12-26T11:57:13.223755",
+      "level": "INFO",
+      "message": "Step 2: Starting dev server..."
+    },
+    {
+      "timestamp": "2025-12-26T11:57:13.236466",
+      "level": "INFO",
+      "message": "Waiting for server..."
+    },
+    {
+      "timestamp": "2025-12-26T11:57:28.794112",
+      "level": "SUCCESS",
+      "message": "Status endpoint [OK]"
+    },
+    {
+      "timestamp": "2025-12-26T11:57:28.896969",
+      "level": "SUCCESS",
+      "message": "Control endpoint [OK]"
+    },
+    {
+      "timestamp": "2025-12-26T11:57:28.897206",
+      "level": "SUCCESS",
+      "message": "Policy gate [OK]"
+    },
+    {
+      "timestamp": "2025-12-26T11:57:28.900197",
+      "level": "SUCCESS",
+      "message": "=== COMPLETED IN 50.30s ==="
+    }
+  ]
+}

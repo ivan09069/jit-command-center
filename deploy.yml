@@ -1,0 +1,91 @@
+# .github/workflows/deploy.yml
+# Autonomous deployment via GitHub Actions
+# Runs on push to main, validates, and deploys if clean
+
+name: Autonomous Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install Python dependencies
+      run: |
+        pip install requests
+    
+    - name: Install Node dependencies
+      run: npm ci
+    
+    - name: Run Deployment Agent
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        REPORT_WEBHOOK: ${{ secrets.REPORT_WEBHOOK }}
+      run: |
+        python deployment_agent.py \
+          --project . \
+          --webhook "$REPORT_WEBHOOK" \
+          --output deployment_report.json
+    
+    - name: Upload deployment report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-report
+        path: deployment_report.json
+    
+    - name: Comment on commit (if failed)
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('deployment_report.json', 'utf8'));
+          
+          const comment = `## ❌ Deployment Failed
+          
+          **Reason:** ${report.reason}
+          
+          **Failed at:** ${new Date(report.logs[report.logs.length - 1].timestamp).toLocaleString()}
+          
+          <details>
+          <summary>View logs</summary>
+          
+          \`\`\`
+          ${report.logs.map(l => `[${l.level}] ${l.message}`).join('\n')}
+          \`\`\`
+          
+          </details>
+          `;
+          
+          github.rest.repos.createCommitComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            commit_sha: context.sha,
+            body: comment
+          });
+    
+    - name: Deploy to Vercel
+      if: success()
+      run: |
+        npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes

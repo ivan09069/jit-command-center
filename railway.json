@@ -1,0 +1,18 @@
+# railway.json
+# Railway cron job configuration
+# Runs deployment agent on schedule
+
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python deployment_agent.py --project . --webhook $REPORT_WEBHOOK",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 3
+  },
+  "cron": {
+    "schedule": "0 2 * * *",
+    "command": "python deployment_agent.py --project . --webhook $REPORT_WEBHOOK --output /tmp/deployment_report.json"
+  }
+}
