@@ -277,3 +277,23 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* Reactive Threat System - UI re-tints based on threat level */
+.hud-stage[data-threat="low"]{
+  --hud-purple: #55ffb2;
+  --hud-purple-2: #10b981;
+}
+
+.hud-stage[data-threat="moderate"]{
+  /* Uses default purple values */
+}
+
+.hud-stage[data-threat="elevated"]{
+  --hud-purple: #ffb020;
+  --hud-purple-2: #f59e0b;
+}
+
+.hud-stage[data-threat="critical"]{
+  --hud-purple: #ff3d6e;
+  --hud-purple-2: #dc2626;
+}

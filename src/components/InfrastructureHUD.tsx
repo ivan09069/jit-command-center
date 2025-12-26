@@ -13,7 +13,15 @@ export default function InfrastructureHUD() {
   }, []);
 
   return (
-    <div className="hud-stage">
+    <div 
+      className="hud-stage"
+      data-threat={
+        threatLevel >= 80 ? 'critical' :
+        threatLevel >= 60 ? 'elevated' : 
+        threatLevel >= 40 ? 'moderate' : 
+        'low'
+      }
+    >
       {/* Header */}
       <header className="hud-header">
         <div className="hud-chip" style={{ color: 'var(--hud-green)' }}>
